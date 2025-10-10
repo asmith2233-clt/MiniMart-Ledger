@@ -16,9 +16,31 @@ public class HomeScreen {
                  P) Make Payment (Debit)
                  L) Ledger
                  X) Exit
-                 5- Quit the application
                 """;
             System.out.println(homeMenu);
+        while (true) {
+            System.out.print(homeMenu);
+
+            char command;
+            command= InputCollector.promptForChar("Enter your command");
+
+            switch (command) {
+                case 'D':
+                    display deposits();
+                    break;
+                case 'P':
+                    Make a payment();
+                case 'L':
+                    showLedger();
+                    break;
+                case 'X':
+                    goToExit();
+                    break;
+
+                default:
+                    System.out.println("INVALID COMMAND!! Please select a valid option.");
+                    break;
+
 
     }
     public static void ledgerMenu(){
@@ -32,6 +54,31 @@ public class HomeScreen {
                 """;
         System.out.println(ledgerMenu);
 
+        while (true) {
+            System.out.print(ledgerMenu);
+
+            char command;
+            command= InputCollector.promptForChar("Enter your command");
+
+            switch (command) {
+                case 'A':
+                    displayAllEntries();
+                    break;
+                case 'D':
+                    displayDeposits();
+                case 'P':
+                    makePayments();
+                    break;
+                case 'R':
+                    boolean goToMain;
+                    break;
+                case 'H':
+                    return;
+                default:
+                    System.out.println("INVALID COMMAND!! Please select a valid option.");
+                    break;
+            }
+
     }
     public static void reportMenu(){
         String reportMenu = """
@@ -44,5 +91,5 @@ public class HomeScreen {
                 0) Back
                 """;
     }
-    
+
 }

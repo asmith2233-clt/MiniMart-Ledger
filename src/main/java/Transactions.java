@@ -9,6 +9,9 @@ public class Transactions {
     private String vendor;
     private double amount;
 
+    public Transactions(LocalDate date, LocalTime time, String description, String vendor, double amount) {
+    }
+
     public String getVendor() {
         return vendor;
     }
@@ -43,12 +46,12 @@ public class Transactions {
 
         public static Transactions fromCSV(String csvline) {
             String[] parts = csvline.split("\\|");
-                    LocalDate date= LocalDate.parse(parts[0],);
+                    LocalDate date= LocalDate.parse(parts[0]);
                     LocalTime time = LocalTime.parse(parts[1]);
                     String description = parts[2];
                     String vendor = parts[3];
                     double amount = Double.parseDouble(parts[4]);
-                    return new Transaction(date, time, description, vendor, amount );
+                    return new Transactions(date, time, description, vendor, amount );
     }
 }
 
