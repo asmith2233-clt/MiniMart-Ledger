@@ -1,58 +1,55 @@
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 public class Transactions {
-    private String date;
-    private String time;
+    private LocalDate date;
+    private LocalTime time;
     private String description;
     private String vendor;
     private double amount;
 
-
-    public double getAmount() {
-        return amount;
+    public String getVendor() {
+        return vendor;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
+    public LocalTime getTime() {
+        return time;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public String getTime() {
-        return time;
+    public double getAmount() {
+        return amount;
     }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public String getVendor() {
-        return vendor;
-    }
-
-    public void setVendor(String vendor) {
-        this.vendor = vendor;
-    }
-
-    public Transactions(String date, String time, String description, String vendor, double amount){
+    public String Transactions(LocalDate date, LocalTime time, String description, String vendor, double amount) {
         this.date = date;
         this.time = time;
         this.description = description;
         this.vendor = vendor;
         this.amount = amount;
 
+
+        return description;
+
+        }
+
+        public static Transactions fromCSV(String csvline) {
+            String[] parts = csvline.split("\\|");
+                    LocalDate date= LocalDate.parse(parts[0],);
+                    LocalTime time = LocalTime.parse(parts[1]);
+                    String description = parts[2];
+                    String vendor = parts[3];
+                    double amount = Double.parseDouble(parts[4]);
+                    return new Transaction(date, time, description, vendor, amount );
     }
 }
+
 
