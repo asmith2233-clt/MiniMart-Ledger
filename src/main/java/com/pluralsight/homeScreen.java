@@ -4,9 +4,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.YearMonth;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -15,6 +15,8 @@ public class homeScreen {
     public static ArrayList<Transactions>  transactions = getTransactionsFromFile();
 
     public static void main(String[] args) {
+
+        // Start the app by showing the home menu
         homeMenu();
     }
 
@@ -158,12 +160,16 @@ public class homeScreen {
         String vendor = ConsoleHelper.promptForString("Enter vendor ");
         double amount = ConsoleHelper.promptForDouble("Enter Amount ");
 
+        amount = -Math.abs(amount); // ensure negative for payment
 
-
-
-
-        Transactions transaction = promptForTransaction(-amount); // negative amount for payment
         Transactions t = new Transactions(date, time, description, vendor, amount);
+        transactions.add(t);
+
+        try {
+            writeTransactionToFile(t);
+        } catch (IOException e) {
+            System.out.println("Error saving payment: " + e.getMessage());
+        }
         System.out.println("Payment added.");
 
     }
@@ -208,34 +214,100 @@ public class homeScreen {
 
     public static void displayAllEntries() {
         System.out.println("Displaying all entries...");
+        for (Transactions t : transactions) {
+            System.out.printf("%s | %s | %s | %s | %.2f%n",
+                    t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+        }
+
     }
 
     public static void displayDeposits() {
         System.out.println("Displaying deposits...");
+        for (Transactions t : transactions) {
+            if (t.getAmount() > 0) {
+                System.out.printf("%s | %s | %s | %s | %.2f%n",
+                        t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+            }
+        }
     }
 
     public static void displayPayments() {
         System.out.println("Displaying payments...");
+        for (Transactions t : transactions) {
+            if (t.getAmount() < 0) {
+                System.out.printf("%s | %s | %s | %s | %.2f%n",
+                        t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+            }
+        }
     }
 
     public static void reportMonthToDate() {
         System.out.println("Report: Month to Date...");
+        LocalDate today = LocalDate.now();
+        LocalDate startOfMonth = today.withDayOfMonth(1);
+
+        System.out.println("==== Month to Date Transactions ====");
+        for (Transactions t : transactions) {
+            if (!t.getDate().isBefore(startOfMonth) && !t.getDate().isAfter(today)) {
+                System.out.println(t);
+            }
+        }
     }
 
     public static void reportPreviousMonth() {
         System.out.println("Report: Previous Month...");
+        YearMonth current = YearMonth.now();
+        YearMonth previous = current.minusMonths(1);
+
+        LocalDate start = previous.atDay(1);
+        LocalDate end = previous.atEndOfMonth();
+
+        System.out.println("==== Previous Month Transactions ====");
+        for (Transactions t : transactions) {
+            if (!t.getDate().isBefore(start) && !t.getDate().isAfter(end)) {
+                System.out.println(t);
+            }
+        }
     }
 
     public static void reportYearToDate() {
         System.out.println("Report: Year to Date...");
+        LocalDate today = LocalDate.now();
+        LocalDate startOfYear = today.withDayOfYear(1);
+
+        System.out.println("==== Year to Date Transactions ====");
+        for (Transactions t : transactions) {
+            if (!t.getDate().isBefore(startOfYear) && !t.getDate().isAfter(today)) {
+                System.out.println(t);
+            }
+        }
     }
 
     public static void reportPreviousYear() {
         System.out.println("Report: Previous Year...");
+        int previousYear = LocalDate.now().getYear() - 1;
+
+        LocalDate start = LocalDate.of(previousYear, 1, 1);
+        LocalDate end = LocalDate.of(previousYear, 12, 31);
+
+        System.out.println("==== Previous Year Transactions ====");
+        for (Transactions t : transactions) {
+            if (!t.getDate().isBefore(start) && !t.getDate().isAfter(end)) {
+                System.out.println(t);
+            }
+        }
     }
 
     public static void searchByVendor() {
         System.out.println("Searching by vendor...");
+        String vendorSearch = ConsoleHelper.promptForString("Enter vendor name to search");
+
+        System.out.println("==== Transactions for Vendor: " + vendorSearch + " ====");
+        for (Transactions t : transactions) {
+            if (t.getVendor().equalsIgnoreCase(vendorSearch)) {
+                System.out.println(t);
+            }
+        }
     }
 
 
