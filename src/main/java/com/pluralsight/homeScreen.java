@@ -2,6 +2,9 @@ package com.pluralsight;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.time.LocalDate;
@@ -9,7 +12,7 @@ import java.time.LocalTime;
 
 public class homeScreen {
 
-    private static Scanner scanner = new Scanner(System.in);
+    public static ArrayList<Transactions>  transactions = getTransactionsFromFile();
 
     public static void main(String[] args) {
         homeMenu();
@@ -29,19 +32,19 @@ public class homeScreen {
         while (true) {
             System.out.print(homeMenu);
 
-            char command = ConsoleHelper.promptForChar("Enter your command: ");
+            String command = ConsoleHelper.promptForString("Enter Command: 'D', 'p', 'L', 'X' ");
 
-            switch (Character.toUpperCase(command)) {
-                case 'D':
+            switch (command) {
+                case "D":
                     addDeposit();
                     break;
-                case 'P':
+                case "P":
                     makePayment();
                     break;
-                case 'L':
+                case "L":
                     ledgerMenu();
                     break;
-                case 'X':
+                case "X":
                     System.out.println("Exiting... Goodbye!");
                     System.exit(0);
                     break;
@@ -65,22 +68,22 @@ public class homeScreen {
         while (true) {
             System.out.print(ledgerMenu);
 
-            char command = ConsoleHelper.promptForChar("Enter your command: ");
+            String command = ConsoleHelper.promptForString("Enter your command: ");
 
-            switch (Character.toUpperCase(command)) {
-                case 'A':
+            switch (command) {
+                case "A":
                     displayAllEntries();
                     break;
-                case 'D':
+                case "D":
                     displayDeposits();
                     break;
-                case 'P':
+                case "P":
                     displayPayments();
                     break;
-                case 'R':
+                case "R":
                     reportMenu();
                     break;
-                case 'H':
+                case "H":
                     return; // back to home menu
                 default:
                     System.out.println("INVALID COMMAND!! Please select a valid option.");
@@ -131,43 +134,75 @@ public class homeScreen {
     }
 
     public static void addDeposit() {
-        System.out.println("How much do you want to deposit? ");
-        double amount = scanner.nextDouble();
-        scanner.nextLine();
-        System.out.println("What date will this deposit be added? yyyy-mm-dd ");
-        String date = scanner.nextLine();
-        System.out.println("What time will this be deposited? HH:mm:ss");
-        String time = scanner.nextLine();
-        System.out.println("Who is the vendor? ");
-        String vendor = scanner.nextLine();
-        System.out.println("What is the description? ");
-        String description = scanner.nextLine();
-
-        LocalDate convertedDate = LocalDate.parse(date);
-        LocalTime convertedTime = LocalTime.parse(time);
+        System.out.println("Add Deposit ");
+        LocalDate date = ConsoleHelper.promptForDate("Enter Date yyyy-mm-dd");
+        LocalTime time = ConsoleHelper.promptForTime("Enter time HH:mm:ss");
+        String description = ConsoleHelper.promptForString("Enter description ");
+        String vendor = ConsoleHelper.promptForString("Enter vendor ");
+        double amount = ConsoleHelper.promptForDouble("Enter Amount ");
 
 
-        Transactions transaction = new Transactions(convertedDate, convertedTime, description, vendor, amount);
+        Transactions transaction = promptForTransaction(amount);
+        Transactions t = new Transactions(date, time, description, vendor, amount);
+
+        System.out.println("Deposit added.");
 
         // write the info that we got to the csv file
 
     }
 
     public static void makePayment() {
-        System.out.println("How much? ");
-        double amount = scanner.nextDouble();
-        scanner.nextLine();
-        System.out.println("What date will you make this payment? yyyy-mm-dd ");
-        String date = scanner.nextLine();
-        System.out.println("What time will you make this payment? HH:mm:ss");
-        String time = scanner.nextLine();
-        System.out.println("Who is the vendor? ");
-        String vendor = scanner.nextLine();
-        System.out.println("What is the description? ");
-        String description = scanner.nextLine();
+        LocalDate date = ConsoleHelper.promptForDate("Enter Date yyyy-mm-dd");
+        LocalTime time = ConsoleHelper.promptForTime("Enter time HH:mm:ss");
+        String description = ConsoleHelper.promptForString("Enter description ");
+        String vendor = ConsoleHelper.promptForString("Enter vendor ");
+        double amount = ConsoleHelper.promptForDouble("Enter Amount ");
 
-        LocalDate convertedDate = LocalDate.parse(date);
-        LocalTime convertedTime = LocalTime.parse(time);
+
+
+
+
+        Transactions transaction = promptForTransaction(-amount); // negative amount for payment
+        Transactions t = new Transactions(date, time, description, vendor, amount);
+        System.out.println("Payment added.");
+
+    }
+
+    private static void writeTransactionToFile(Transactions t) throws IOException {
+        try (FileWriter writer = new FileWriter("Transactions.csv", true)) {
+            writer.write(String.format("%s|%s|%s|%s|%.2f%n",
+                    t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount()));
+        } catch (IOException e) {
+            System.out.println("Error writing to file: " + e.getMessage());
+        }
+    }
+
+    public static ArrayList<Transactions> getTransactionsFromFile() {
+        ArrayList<Transactions> transactions = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("Transactions.csv"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length != 5) continue;
+
+                LocalDate date = LocalDate.parse(parts[0]);
+                LocalTime time = LocalTime.parse(parts[1]);
+                String description = parts[2];
+                String vendor = parts[3];
+                double amount = Double.parseDouble(parts[4]);
+
+                transactions.add(new Transactions(date, time, description, vendor, amount));
+            }
+        } catch (IOException | DateTimeParseException | NumberFormatException e) {
+            System.out.println("Error reading transactions: " + e.getMessage());
+        }
+        return transactions;
+
+
+    }
+
+    private static Transactions promptForTransaction(double amount) {
+        return null;
 
     }
 
@@ -203,31 +238,7 @@ public class homeScreen {
         System.out.println("Searching by vendor...");
     }
 
-    public static ArrayList<Transactions> getTransactionsFromFile() {
-        ArrayList<Transactions> inventory = new ArrayList<>();
-        try {
-            FileReader fileReader = new FileReader("Transactions.csv");
-            BufferedReader br = new BufferedReader(fileReader);
 
-            String lineFromString;
-
-            while ((lineFromString = br.readLine()) != null) {
-                String[] parts = lineFromString.split("\\|");
-                int id = Integer.parseInt(parts[0]);
-                String name = parts[1];
-                double price = Double.parseDouble(parts[2]);
-
-                Transactions t = new Transactions();
-                inventory.add(t);
-            }
-
-        } catch (Exception e) {
-            System.out.println("There was an error reading the file!");
-        }
-
-        return inventory;
-
-    }
 }
 
 
