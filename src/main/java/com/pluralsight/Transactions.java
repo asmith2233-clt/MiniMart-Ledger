@@ -11,8 +11,6 @@ public class Transactions {
     private String vendor;
     private double amount;
 
-    public Transactions() {
-    }
 
     public String getVendor() {
         return vendor;
@@ -44,19 +42,12 @@ public class Transactions {
 
     }
 
-    public static Transactions fromCSV(String csvline) {
-        String[] parts = csvline.split("\\|");
-        LocalDate date = LocalDate.parse(parts[0]);
-        LocalTime time = LocalTime.parse(parts[1]);
-        String description = parts[2];
-        String vendor = parts[3];
-        double amount = Double.parseDouble(parts[4]);
-        return new Transactions();
+        @Override
+        public String toString() {
+            return String.format("%-30s | %-30s | %-30s | %-30s | %-50.2f",
+                    date, time, description, vendor, amount);
+        }
+
     }
 
-    @Override
-    public String toString() {
-        return date + " | " + time + " | " + description + " | " + vendor + " | " + String.format("%.2f", amount);
-    }
-}
 

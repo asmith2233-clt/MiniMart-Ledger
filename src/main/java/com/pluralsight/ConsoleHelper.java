@@ -5,57 +5,65 @@ import java.time.LocalTime;
 import java.util.Scanner;
 
 public class ConsoleHelper {
-    private static Scanner scanner = new Scanner(System.in);
 
+    private static final Scanner scanner = new Scanner(System.in);
+
+    // Safely prompt for integer input
     public static int promptForInt(String prompt) {
-        System.out.print(prompt + ": ");
-        int result = scanner.nextInt();
-        scanner.nextLine();
-        return result;
+        while (true) {
+            try {
+                System.out.print(prompt + ": ");
+                String input = scanner.nextLine();
+                return Integer.parseInt(input.trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a whole number.");
+            }
+        }
     }
 
+    // Safely prompt for double input
     public static double promptForDouble(String prompt) {
         while (true) {
             try {
                 System.out.print(prompt + ": ");
                 String input = scanner.nextLine();
-                return Double.parseDouble(input);  // Convert text to double
+                return Double.parseDouble(input.trim());
             } catch (NumberFormatException e) {
-                System.out.println(" Invalid input! Please enter a number");
+                System.out.println("Invalid input! Please enter a number.");
             }
         }
     }
 
+    // Prompt for a text input
     public static String promptForString(String prompt) {
         System.out.print(prompt + ": ");
-        return scanner.nextLine();
+        return scanner.nextLine().trim();
     }
 
-    public static LocalDate promptForDate(String prompt){
-
-        while(true){
-            try{
-                System.out.print(prompt + ": ");
-                String dateAsString = scanner.nextLine();
-                return LocalDate.parse(dateAsString);
-            }
-            catch(Exception ex){
-                System.out.println("Invalid Entry, please enter a valid date (YYYY-MM-DD)");
-            }
-        }
-    }
-
-    public static LocalTime promptForTime(String prompt){
+    // Prompt for a valid date (YYYY-MM-DD)
+    public static LocalDate promptForDate(String prompt) {
         while (true) {
             try {
                 System.out.print(prompt + ": ");
-                String timeAsString = scanner.nextLine();
-                return LocalTime.parse(timeAsString);
+                String dateAsString = scanner.nextLine().trim();
+                return LocalDate.parse(dateAsString);
             } catch (Exception ex) {
-                System.out.println("Invalid Entry, please enter a valid time (HH:MM:SS)");
+                System.out.println("Invalid entry! Please enter a valid date (YYYY-MM-DD).");
             }
         }
     }
 
-
+    // Prompt for a valid time (HH:MM:SS)
+    public static LocalTime promptForTime(String prompt) {
+        while (true) {
+            try {
+                System.out.print(prompt + ": ");
+                String timeAsString = scanner.nextLine().trim();
+                return LocalTime.parse(timeAsString);
+            } catch (Exception ex) {
+                System.out.println("Invalid entry! Please enter a valid time (HH:MM:SS).");
+            }
+        }
+    }
 }
+
