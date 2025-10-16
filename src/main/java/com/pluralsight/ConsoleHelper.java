@@ -4,11 +4,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
 
+// A helper class to handle user input from the console.
 public class ConsoleHelper {
 
+    // A single, static Scanner object is used for the entire class to prevent resource leaks
     private static final Scanner scanner = new Scanner(System.in);
 
-    // Safely prompt for integer input
+//Prompts the user for a whole number (integer) input.
     public static int promptForInt(String prompt) {
         while (true) {
             try {
@@ -21,7 +23,7 @@ public class ConsoleHelper {
         }
     }
 
-    // Safely prompt for double input
+    // Prompts the user for a decimal number (double) input.
     public static double promptForDouble(String prompt) {
         while (true) {
             try {
