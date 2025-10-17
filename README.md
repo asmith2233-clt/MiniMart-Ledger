@@ -1,7 +1,7 @@
 Mini Mart Ledger Application
 # Project Description
 
-The Mini Mart Ledger App is a console-based Java program that helps users track financial transactions for a small business such as a gas station or convenience store.
+The Mini Mart Ledger App is a program that helps users track financial transactions for my small business which would be a gas station or convenience store.
 
 It allows users to:
 
