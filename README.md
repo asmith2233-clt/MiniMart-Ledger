@@ -18,12 +18,14 @@ Automatically save and load data from a .csv file
 This project simulates how a real business ledger operates, giving store owners an easy way to manage finances directly from the terminal.
 
 # Application Screens
-## Home Menu
+## Home Screen
 
 This is the main menu that appears when the application starts.
 It allows the user to add deposits, make payments, view the ledger, or exit the app.
 
 Screenshot:
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/39b24028-fe1c-44ab-9587-23432e76f851" />
+
 
 
 Example Output:
