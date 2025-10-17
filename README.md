@@ -45,11 +45,11 @@ This file stores all recorded transactions.
 Each line represents a single entry with the following format:
 
 date|time|description|vendor|amount
-2025-10-16|10:45:00|Cash Deposit|Bank Deposit|2000.00
-2025-10-15|09:30:00|Opening Promotions|Local Radio Ads|-1250.00
 
 
 Screenshot:
+<img width="648" height="351" alt="image" src="https://github.com/user-attachments/assets/d3c91336-9af7-49dc-903d-931c59adae05" />
+
 
 
 # Interesting Piece of Code
