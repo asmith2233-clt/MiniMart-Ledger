@@ -1,44 +1,94 @@
-# Mini Mart Ledger App
+Mini Mart Ledger Application
+# Project Description
 
-## Overview
-The **Mini Mart Ledger App** is a simple console-based application to manage and track financial transactions for a mini mart. It allows the user to add deposits, make payments, and view the ledger, including detailed reports filtered by date or vendor. All transactions are stored in a CSV file for persistent record-keeping.
+The Mini Mart Ledger App is a console-based Java program that helps users track financial transactions for a small business such as a gas station or convenience store.
 
----
+It allows users to:
 
-## Features
+Add deposits (money received)
 
-### Home Screen
-When the app starts, the user is presented with the following options:
+Record payments (money spent)
 
-- **D) Add Deposit** – Prompts the user for deposit details (date, time, description, vendor, and amount) and saves it to `transactions.csv`.
-- **P) Make Payment (Debit)** – Prompts the user for payment details and saves it as a negative amount in the CSV file.
-- **L) Ledger** – Opens the ledger menu to view all transactions and reports.
-- **X) Exit** – Exits the application.
+View all transactions in a clear table format
 
-> The app continues running until the user chooses to exit.
+Generate reports by month, year, or vendor
 
----
+Automatically save and load data from a .csv file
 
-### Ledger Menu
-The ledger menu displays transactions in **newest-first order**. Options include:
+This project simulates how a real business ledger operates, giving store owners an easy way to manage finances directly from the terminal.
 
-- **A) All Entries** – Displays all transactions.
-- **D) Deposits** – Displays only positive entries (deposits).
-- **P) Payments** – Displays only negative entries (payments).
-- **R) Reports** – Opens a sub-menu for generating reports:
-  - **1) Month To Date** – Shows transactions from the start of the current month.
-  - **2) Previous Month** – Shows transactions from the previous month.
-  - **3) Year To Date** – Shows transactions from the start of the current year.
-  - **4) Previous Year** – Shows transactions from the previous year.
-  - **5) Search by Vendor** – Prompts the user for a vendor name and displays matching transactions.
-  - **0) Back** – Returns to the Ledger Menu.
-- **H) Home** – Returns to the Home Screen.
+# Application Screens
+## Home Menu
 
----
+This is the main menu that appears when the application starts.
+It allows the user to add deposits, make payments, view the ledger, or exit the app.
 
-## How to Run
+Screenshot:
 
-1. Ensure you have **Java** installed on your machine.
-2. Compile all `.java` files:
-   ```bash
-   javac com/pluralsight/*.java
+
+Example Output:
+
+======== Ledger App =====
+ Welcome to the Mini Mart!
+======= Home Menu ======
+ D) Add Deposit
+ P) Make Payment (Debit)
+ L) Ledger
+ X) Exit
+Enter Command (D, P, L, X):
+
+## Transactions.csv File
+
+This file stores all recorded transactions.
+Each line represents a single entry with the following format:
+
+date|time|description|vendor|amount
+2025-10-16|10:45:00|Cash Deposit|Bank Deposit|2000.00
+2025-10-15|09:30:00|Opening Promotions|Local Radio Ads|-1250.00
+
+
+Screenshot:
+
+
+# Interesting Piece of Code
+## transactions.csv + Home Menu (Saving and Loading Data)
+
+One of the most interesting parts of this project is how the app saves and retrieves data using the transactions.csv file.
+This turns the program into a persistent ledger, meaning your data isn’t lost when the program closes.
+
+// Save transaction to CSV file
+private static void writeTransactionToFile(Transactions t) {
+    try (FileWriter writer = new FileWriter("transactions.csv", true);
+         PrintWriter pw = new PrintWriter(writer)) {
+        pw.printf("%s|%s|%s|%s|%.2f%n",
+                t.getDate(), t.getTime(), t.getDescription(), t.getVendor(), t.getAmount());
+    } catch (IOException e) {
+        System.out.println("Error writing transaction: " + e.getMessage());
+    }
+}
+
+
+This code automatically appends each new transaction to the CSV file when you add a deposit or payment.
+When the app restarts, it reads that file and loads all past entries, keeping your ledger up to date.
+
+# Technologies Used
+
+Language: Java
+
+Packages Used: java.io, java.time, java.util
+
+File Type: .csv for storing transactions
+
+Tools: IntelliJ IDEA / VS Code
+
+# Future Improvements
+
+If I could add one new feature, it would be an automatic balance calculator that shows the store’s total current balance after each transaction.
+This would make it even more practical for managing Mini Mart finances in real time.
+
+# Author
+
+Ayanna Smith
+Student Project — Mini Mart Ledger
+
+“I created this ledger app as a step toward managing the kind of Mini Mart I hope to run one day.”
